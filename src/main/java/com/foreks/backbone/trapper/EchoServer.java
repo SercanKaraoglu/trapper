@@ -10,7 +10,7 @@ public class EchoServer extends Verticle {
     @Override
     public void start() {
         this.vertx.eventBus().registerHandler("deneme", h -> {
-            h.reply("SErcan the white ");
+            h.reply("Sercan the white niggaz");
         });
 
         this.vertx.createNetServer().connectHandler(new Handler<NetSocket>() {
