@@ -150,6 +150,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+       		<cluster>true</cluster>
+        </configuration>
       </plugin>
 
       <!-- Other plugins required by the build -->

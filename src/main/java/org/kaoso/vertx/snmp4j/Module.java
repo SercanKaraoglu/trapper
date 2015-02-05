@@ -183,6 +183,9 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
         }
         final PDU pdu = createPdu(message, target.getVersion());
         pdu.setType(type);
+        if (pdu.getType() == PDU.GETBULK) {
+            pdu.setMaxRepetitions(message.body().getInteger("maxRepetition", this.config.getInteger("maxRepetition", 5)));
+        }
         final ResponseListener listener = new ResponseListener() {
 
             @Override
@@ -233,10 +236,9 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
         final OctetString securityName = new OctetString(config.getString("securityName", config.getString("community", "public")));
         final int retries = config.getInteger("retries", 0);
         final int timeout = config.getInteger("timeout", 5000);
-        int version = SnmpConstants.version2c;
+        int version = SnmpConstants.version1;
         version = config.getInteger("version", version);
-        target = createTarget(address, version);
-        target.setAddress(address);
+        target = createTarget(address, securityName);
         target.setRetries(retries);
         target.setVersion(version);
         target.setTimeout(timeout);
@@ -257,13 +259,12 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
         return (JsonObject) target;
     }
 
-    private Target createTarget(final Address address, final int version) {
-        return new CommunityTarget();
+    private Target createTarget(final Address address, final OctetString community) {
+        return new CommunityTarget(address, community);
     }
 
     private PDU createPdu(final Message<JsonObject> message, final int version) {
         final PDU pdu = DefaultPDUFactory.createPDU(version);
-        pdu.setMaxRepetitions(message.body().getInteger("maxRepetition", this.config.getInteger("maxRepetition", 5)));
         final JsonArray items = getItems(message);
         for (int i = 0; i < items.size(); i++) {
             final Object item = items.get(i);
