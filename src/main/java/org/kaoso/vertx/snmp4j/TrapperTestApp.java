@@ -19,14 +19,14 @@ public class TrapperTestApp extends Verticle {
                                   final String jsonString = buffer.getString(0, buffer.length(), "UTF-8");
                                   final JsonObject message = new JsonObject(jsonString);
                                   this.vertx.eventBus()
-                                            .send("org.kaoso.vertx.snmp4j",
-                                                  message,
-                                                  (final Message<JsonObject> response) -> {
-                                                      final String status = response.body().getString("status");
-                                                      postRequest.response()
-                                                                 .setStatusCode(status.equals("ok") ? java.net.HttpURLConnection.HTTP_OK : HttpURLConnection.HTTP_INTERNAL_ERROR)
-                                                                 .setStatusMessage(status)
-                                                                 .end();
+                                  .send("org.kaoso.vertx.snmp4j",
+                                        message,
+                                        (final Message<JsonObject> response) -> {
+                                            final String status = response.body().getString("status");
+                                            postRequest.response().putHeader("Content-Type", "application/json");
+                                            postRequest.response()
+                                            .setStatusCode(status.equals("ok") ? java.net.HttpURLConnection.HTTP_OK : HttpURLConnection.HTTP_INTERNAL_ERROR)
+                                            .end(response.body().toString(), "UTF-8");
                                         });
                               });
                           });

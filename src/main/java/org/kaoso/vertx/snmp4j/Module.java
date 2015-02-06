@@ -134,7 +134,7 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
     }
 
     private TransportMapping createTransportMapping(final JsonObject config) throws IOException {
-        final Address address = GenericAddress.parse(config.getString("address", "udp:localhost/161"));
+        final Address address = GenericAddress.parse(config.getString("address", "udp:localhost/10161"));
         final TransportMapping transport = TransportMappings.getInstance().createTransportMapping(address);
         try {
             final Class<?> clazz = transport.getClass();
@@ -202,9 +202,22 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
                     sendError(message, "None response");
                     return;
                 }
-                final String code = Json.encode(response);
-                final JsonObject json = new JsonObject(code);
-                sendOK(message, json);
+                // to decode octet string and summarize variable binding field
+                final PDU myPdu = new PDU(response) {
+                    @Override
+                    public Vector getVariableBindings() {
+                        final Vector<Map> variableBindings1 = new Vector<Map>();
+                        final Vector<VariableBinding> variableBindings2 = super.getVariableBindings();
+                        for (final VariableBinding varBind2 : variableBindings2) {
+                            final Map map = new HashMap();
+                            map.put(varBind2.getOid().toString(), varBind2.getVariable().toString());
+                            variableBindings1.add(map);
+                        }
+                        return variableBindings1;
+                    }
+                };
+
+                sendOK(message, new JsonObject(Json.encode(myPdu)));
             }
         };
         try {
@@ -236,7 +249,7 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
         final OctetString securityName = new OctetString(config.getString("securityName", config.getString("community", "public")));
         final int retries = config.getInteger("retries", 0);
         final int timeout = config.getInteger("timeout", 5000);
-        int version = SnmpConstants.version1;
+        int version = SnmpConstants.version2c;
         version = config.getInteger("version", version);
         target = createTarget(address, securityName);
         target.setRetries(retries);
