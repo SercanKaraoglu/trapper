@@ -194,6 +194,7 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
                 snmp.cancel(event.getRequest(), this);
                 final PDU response = event.getResponse();
                 final Exception error = event.getError();
+
                 if (error != null) {
                     sendError(message, error.getMessage());
                     return;
@@ -216,12 +217,16 @@ public class Module extends BusModBase implements CommandResponder, Handler<Mess
                         return variableBindings1;
                     }
                 };
-
                 sendOK(message, new JsonObject(Json.encode(myPdu)));
+
             }
+
         };
         try {
             this.snmp.send(pdu, target, null, listener);
+            if (pdu.getType() == PDU.V1TRAP || pdu.getType() == PDU.TRAP) {
+                sendOK(message, null);
+            }
         } catch (final IOException e) {
             sendError(message, e.getMessage());
         }
