@@ -1,0 +1,13 @@
+{  
+   "snmp-rest":{  
+      "address":"com.foreks.snmp.agent",
+      "port":8080
+   },
+   "snmp-module":{  
+      "address":"com.foreks.snmp.agent",
+      "instance" : 2,
+      "manager":{  
+         "address":"udp:localhost/10161"
+      }
+   }
+}
