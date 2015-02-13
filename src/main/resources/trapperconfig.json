@@ -7,11 +7,8 @@
       "address":"com.foreks.snmp.agent",
       "instance" : 1,
       "transport-mapping":{  
-<<<<<<< HEAD
          "address":"udp:10.10.0.217/10161"
-=======
-         "address":"10.10.0.181/10161"
->>>>>>> 0114094e0a3ada02ade2e350c37503359c46dba7
+         
       }
    }
 }
