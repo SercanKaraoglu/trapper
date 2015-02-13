@@ -150,9 +150,7 @@
           </execution>
         </executions>
         <configuration>
-       		<cluster>true</cluster>
        		<configFile>src/main/resources/trapperconfig.json</configFile>
-            <instances>1</instances>
         </configuration>
       </plugin>
 
