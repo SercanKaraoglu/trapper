@@ -130,6 +130,7 @@ public class SnmpVerticle extends BusModBase implements CommandResponder, Handle
 
     private TransportMapping createTransportMapping(final JsonObject config) throws IOException {
         final Address address = GenericAddress.parse(config.getObject("manager").getString("address", "udp:localhost/10161"));
+        final Address address = GenericAddress.parse(config.getObject("transport-mapping").getString("address", "udp:localhost/10161"));
         final TransportMapping transport = TransportMappings.getInstance().createTransportMapping(address);
         try {
             final Class<?> clazz = transport.getClass();
@@ -227,6 +228,7 @@ public class SnmpVerticle extends BusModBase implements CommandResponder, Handle
             } else {
                 pdu.add(new VariableBinding(SnmpConstants.sysUpTime, new TimeTicks(MILLISECONDS.toSeconds(ManagementFactory.getRuntimeMXBean()
                                                                                                                            .getUptime()))));
+
                 this.snmp.send(pdu, target, null, listener);
             }
         } catch (final IOException e) {
@@ -298,6 +300,7 @@ public class SnmpVerticle extends BusModBase implements CommandResponder, Handle
             }
             pdu.add(vb);
         }
+
         return pdu;
     }
 

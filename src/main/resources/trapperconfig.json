@@ -5,9 +5,9 @@
    },
    "snmp-module":{  
       "address":"com.foreks.snmp.agent",
-      "instance" : 2,
-      "manager":{  
-         "address":"udp:localhost/10161"
+      "instance" : 1,
+      "transport-mapping":{  
+         "address":"udp:10.10.0.217/10161"
       }
    }
 }
