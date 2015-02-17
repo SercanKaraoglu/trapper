@@ -1,9 +1,3 @@
-# Vert.x Example Maven Project
+# Vert.x SNMP4J Maven Project
 
-Example project for creating a Vert.x module with a Gradle build.
-
-By default this module contains a simple Java verticle which listens on the event bus and responds to `ping!`
-messages with `pong!`.
-
-This example also shows you how to write tests in Java, Groovy, Ruby and Python
-
+SNMP4j project for creating a Vert.x module.
